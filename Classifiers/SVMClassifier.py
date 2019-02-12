@@ -25,6 +25,7 @@ class SVMClassifier(Classifier.Classifier):
         self.kernel = kernel
         self.vector_machine = None
         self.predictor=None
+        self.pred_matrix = None
         
     def classify(self):
         kernel_mat = self.kernel.matrix_from_data(self.inputs)
@@ -46,8 +47,8 @@ class SVMClassifier(Classifier.Classifier):
         n = inputs.shape[0]
         m = input_to_predict.shape[0]
         pred_matrix = self.kernel.compute_prediction_matrix(inputs,input_to_predict)
-        
-        return (self.predictor.reshape(n,1)).T@pred_matrix
+        self.pred_matrix = pred_matrix
+        self.predictions = np.sign((self.predictor.reshape(n,1)).T@pred_matrix)[0]
     
     def plot_boundaries(self):
         inputs = self.inputs
@@ -59,6 +60,7 @@ class SVMClassifier(Classifier.Classifier):
         
         coefs = (self.predictor.reshape(n,1)).T@inputs
         coef_dir = coefs[0][0]/coefs[0][1]
+        print(coef_dir)
         
         X = np.linspace(-5,5,10)
         Y_1 = 1 - coef_dir*X
