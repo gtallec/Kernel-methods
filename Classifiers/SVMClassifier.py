@@ -7,15 +7,12 @@ Created on Fri Feb  8 21:52:27 2019
 
 @author: gtallec
 """
-######################
-import Classifier
+from . import Classifier               
+from qpsolvers import solve_qp        
 
-######################
-import numpy as np
+import numpy as np        
 import matplotlib.pyplot as plt
 
-######################
-from qpsolvers import solve_qp
 
 class SVMClassifier(Classifier.Classifier):
     
@@ -28,7 +25,9 @@ class SVMClassifier(Classifier.Classifier):
         self.pred_matrix = None
         
     def classify(self):
+        print('STEP 1 - Kernel Matrix computation')
         kernel_mat = self.kernel.matrix_from_data(self.inputs)
+        print('END STEP 1')
         labels = self.labels
         n = labels.shape[0]
         P = kernel_mat
@@ -36,20 +35,23 @@ class SVMClassifier(Classifier.Classifier):
         G = np.vstack([np.diag(labels), np.diag(-labels)])
         h = np.hstack([(1/(2*self.lam*n))*np.ones((n,)), np.zeros((n,))])
         
-        print('SOLVE BEGINS')
+        print('STEP 2 - QP Solving')
         self.predictor = solve_qp(P=P,
                                   q=q,
                                   G=G,
                                   h=h
                                   )
-    def predict(self,input_to_predict):
+        print('END STEP 2')
         
+    def predict(self,input_to_predict):
+        print('STEP x - PREDICTIONS')
         inputs = self.inputs
         n = inputs.shape[0]
         m = input_to_predict.shape[0]
-        pred_matrix = self.kernel.compute_prediction_matrix(inputs,input_to_predict)
+        pred_matrix = self.kernel.compute_similarity_matrix(inputs,input_to_predict)
         self.pred_matrix = pred_matrix
         self.predictions = np.sign((self.predictor.reshape(n,1)).T@pred_matrix)[0]
+        print('END STEP x')
     
     def plot_boundaries(self):
         inputs = self.inputs
@@ -61,7 +63,6 @@ class SVMClassifier(Classifier.Classifier):
         
         coefs = (self.predictor.reshape(n,1)).T@inputs
         coef_dir = coefs[0][0]/coefs[0][1]
-        print(coef_dir)
         
         X = np.linspace(-5,5,10)
         Y_1 = 1 - coef_dir*X
