@@ -33,9 +33,10 @@ class SVMClassifier(Classifier.Classifier):
         n = labels.shape[0]
         P = kernel_mat
         q = -labels
-        G = np.diag(labels)
-        h = (1/(2*self.lam*n))*np.ones((n,))
+        G = np.vstack([np.diag(labels), np.diag(-labels)])
+        h = np.hstack([(1/(2*self.lam*n))*np.ones((n,)), np.zeros((n,))])
         
+        print('SOLVE BEGINS')
         self.predictor = solve_qp(P=P,
                                   q=q,
                                   G=G,

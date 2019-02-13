@@ -4,17 +4,13 @@ class Kernel:
     
     def __init__(self, kernel_fun = lambda x,y : x*y):
         self.kernel_fun = kernel_fun
-        print(self.kernel_fun)
-        print('coucou')
         
     def matrix_from_data(self, inputs):
         eps = 10e-7
         n = inputs.shape[0]
-        kernel_matrix = np.zeros((n,n))
-        for i in range(n):
-            for j in range(n):
-                kernel_matrix[i,j] = self.kernel_fun(inputs[i], inputs[j])
-            
+        
+        kernel_matrix = np.fromfunction(np.vectorize(lambda i,j : self.kernel_fun(inputs[int(i)], inputs[int(j)])), shape = (n,n), dtype = inputs.dtype)
+        print('Kernel Matrix computed', kernel_matrix.shape)
         return kernel_matrix + eps*np.identity(n)
     
     def compute_prediction_matrix(self, inputs, input_to_predict):

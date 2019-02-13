@@ -19,9 +19,9 @@ class Classifier:
         self.classify()
         
     def compute_test_accuracy(self,test_inputs, test_labels):
-        print('predictions', self.predictions)
         self.predict(test_inputs)
         return 1 - (np.count_nonzero(self.predictions - test_labels)/self.predictions.shape[0])
+    
         
 
         

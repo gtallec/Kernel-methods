@@ -23,13 +23,6 @@ class PCA:
         idx = np.argsort(eigen_values)[::-1][:dim_num]
         s_eigen_values = eigen_values[idx]
         s_eigen_vectors = eigen_vectors[idx]
-        
-        print('eigen_values', s_eigen_values)
-        print('eigen_vectors', s_eigen_vectors)
-        
-        print('sorted eigen vectors', s_eigen_vectors.shape)
-        print(np.divide(s_eigen_vectors,np.sqrt(s_eigen_values[:,None])))
-        print('centered_graham_matrix',self.centered_graham_matrix)
 
         projections = self.centered_graham_matrix@(np.divide(s_eigen_vectors,np.sqrt(s_eigen_values[:,None]))).T
         
