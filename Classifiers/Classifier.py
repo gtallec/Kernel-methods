@@ -12,15 +12,23 @@ class Classifier:
         self.inputs = None
         self.labels = None
         self.predictions = None
+        self.hyperParameters = []
+        
+    def setHyperParameters(self,hyperParameters):
+        self.hyperParameters = hyperParameters
+        self.setParams()
+        
+    def setParams(self):
+        pass
+    
+        
         
     def fit(self,inputs, labels):
         self.inputs = inputs
         self.labels = labels
         self.classify()
         
-    def compute_test_accuracy(self,test_inputs, test_labels):
-        self.predict(test_inputs)
-        return 1 - (np.count_nonzero(self.predictions - test_labels)/self.predictions.shape[0])
+
     
         
 

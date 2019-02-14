@@ -16,13 +16,17 @@ import matplotlib.pyplot as plt
 
 class SVMClassifier(Classifier.Classifier):
     
-    def __init__(self,lam,kernel):
+    def __init__(self,kernel):
         Classifier.Classifier.__init__(self)
-        self.lam = lam
+        self.lam = None
         self.kernel = kernel
-        self.vector_machine = None
         self.predictor=None
-        self.pred_matrix = None
+        
+    def setParams(self):
+        if len(self.hyperParameters) != 1:
+            print('WRONG PARAMETRIZATION OF SVM MODEL')
+        self.lam = self.hyperParameters[0]
+            
         
     def classify(self):
         print('STEP 1 - Kernel Matrix computation')
@@ -49,9 +53,8 @@ class SVMClassifier(Classifier.Classifier):
         n = inputs.shape[0]
         m = input_to_predict.shape[0]
         pred_matrix = self.kernel.compute_similarity_matrix(inputs,input_to_predict)
-        self.pred_matrix = pred_matrix
-        self.predictions = np.sign((self.predictor.reshape(n,1)).T@pred_matrix)[0]
-        print('END STEP x')
+        return np.sign((self.predictor.reshape(n,1)).T@pred_matrix)[0]
+
     
     def plot_boundaries(self):
         inputs = self.inputs
