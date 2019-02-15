@@ -28,9 +28,9 @@ class ModelOptimizer:
         testing_slices = testing_slices.astype(int)
         
         
-        accuracy_list = [self.test_routine(inputs[training_slices[i],:],
+        accuracy_list = [self.test_routine(inputs[training_slices[i]],
                                           labels[training_slices[i]],
-                                          inputs[testing_slices[i],:],
+                                          inputs[testing_slices[i]],
                                           labels[testing_slices[i]],
                                           hyperParameters
                                          )
@@ -41,7 +41,7 @@ class ModelOptimizer:
     
     def find_optimal_parameters(self, k, inputs, labels, hyperParametersList):
         return hyperParametersList[np.argmax([self.k_fold_cross_validation(k, inputs, labels, hyperParametersList[i])
-                                          for i in range(hyperParametersList.shape[0])])]
+                                          for i in range(hyperParametersList.shape[0])]),:]
     
         
         
