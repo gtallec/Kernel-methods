@@ -9,8 +9,6 @@ import numpy as np
 class Classifier:
     
     def __init__(self):
-        self.inputs = None
-        self.labels = None
         self.predictions = None
         self.hyperParameters = []
         
@@ -21,12 +19,10 @@ class Classifier:
     def setParams(self):
         pass
     
-        
-        
-    def fit(self,inputs, labels):
-        self.inputs = inputs
-        self.labels = labels
-        self.classify()
+    def fit(self, train_embedding, labels):
+        pass
+    
+
         
 
     

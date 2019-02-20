@@ -8,18 +8,19 @@ Created on Fri Feb  8 21:52:27 2019
 @author: gtallec
 """
 from . import Classifier               
-from qpsolvers import solve_qp        
+from qpsolvers import solve_qp  
+from cvxopt import solvers, matrix
 
 import numpy as np        
 import matplotlib.pyplot as plt
 
 
+
 class SVMClassifier(Classifier.Classifier):
     
-    def __init__(self,kernel):
+    def __init__(self):
         Classifier.Classifier.__init__(self)
         self.lam = None
-        self.kernel = kernel
         self.predictor=None
         
     def setParams(self):
@@ -28,34 +29,22 @@ class SVMClassifier(Classifier.Classifier):
         self.lam = self.hyperParameters[0]
             
         
-    def classify(self):
-        print('STEP 1 - Kernel Matrix computation')
-        kernel_mat = self.kernel.matrix_from_data(self.inputs)
-        print('END STEP 1')
-        labels = self.labels
+    def fit(self, embedding, labels):
+        kernel_mat = embedding
         n = labels.shape[0]
-        P = kernel_mat
-        q = -labels
-        G = np.vstack([np.diag(labels), np.diag(-labels)])
-        h = np.hstack([(1/(2*self.lam*n))*np.ones((n,)), np.zeros((n,))])
-        
-        print('STEP 2 - QP Solving')
-        self.predictor = solve_qp(P=P,
+        P = matrix(kernel_mat, tc = 'd')
+        q = matrix(-labels, tc = 'd')
+        G = matrix(np.vstack([np.diag(labels), np.diag(-labels)]), tc = 'd')
+        h = matrix(np.hstack([(1/(2*self.lam*n))*np.ones((n,)), np.zeros((n,))]), tc = 'd')
+        self.predictor = np.array(solvers.qp(P=P,
                                   q=q,
                                   G=G,
-                                  h=h
-                                  )
-        print('END STEP 2')
+                                  h=h)['x'])
         
-    def predict(self,input_to_predict):
-        print('STEP x - PREDICTIONS')
-        inputs = self.inputs
-        n = inputs.shape[0]
-        m = input_to_predict.shape[0]
-        pred_matrix = self.kernel.compute_similarity_matrix(inputs,input_to_predict)
-        return np.sign((self.predictor.reshape(n,1)).T@pred_matrix)[0]
+    def predict(self,test_embedding):
+        return np.sign((self.predictor.reshape(-1,1)).T@test_embedding)[0]
 
-    
+""" 
     def plot_boundaries(self):
         inputs = self.inputs
         labels = self.labels
@@ -77,7 +66,7 @@ class SVMClassifier(Classifier.Classifier):
         plt.grid(True)
         plt.axis()
         plt.show()
-        
+"""     
 
         
         
