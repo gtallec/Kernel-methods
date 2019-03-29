@@ -44,8 +44,13 @@ class KernelMethodOptimizer:
         print('accuracy list', accuracy_list)
         return np.mean(accuracy_list)
     
-    def find_optimal_parameters(self, k, inputs, labels, hyperParametersList):
-        input_embedding = self.kernel.matrix_from_data(inputs)
+    def find_optimal_parameters(self, k, inputs, labels, hyperParametersList, load = False):
+        input_embedding = None
+        if load:
+            input_embedding = self.kernel.load_embedding()
+        else:
+            input_embedding = self.kernel.matrix_from_data(inputs)
+        self.kernel.save_embedding(input_embedding)
         return hyperParametersList[np.argmax([self.k_fold_cross_validation(k, input_embedding, labels, hyperParametersList[i])
                                           for i in range(hyperParametersList.shape[0])]),:]
     

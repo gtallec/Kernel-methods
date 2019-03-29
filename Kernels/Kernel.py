@@ -3,8 +3,9 @@ import numpy as np
 
 class Kernel:
     
-    def __init__(self, kernel_fun):
+    def __init__(self, kernel_fun, kernel_name):
         self.kernel_fun = kernel_fun
+        self.kernel_name = kernel_name
         
     def matrix_from_data(self, inputs):
         eps = 10e-7
@@ -20,6 +21,16 @@ class Kernel:
                                       shape = (n,m),
                                       dtype = x.dtype)
         return similarity_matrix
+    
+    def save_embedding(self, embedding):
+        filename = 'embeddings/' + self.kernel_name
+        np.savetxt(filename + '.csv', embedding, delimiter=",")
+        
+    def load_embedding(self):
+        filename = 'embeddings/' + self.kernel_name
+        return np.genfromtxt(filename + '.csv', delimiter=',')
+        
+        
     
     
                 
