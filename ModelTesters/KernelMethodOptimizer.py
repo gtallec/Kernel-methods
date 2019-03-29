@@ -46,7 +46,6 @@ class KernelMethodOptimizer:
     
     def find_optimal_parameters(self, k, inputs, labels, hyperParametersList):
         input_embedding = self.kernel.matrix_from_data(inputs)
-        print(input_embedding.shape)
         return hyperParametersList[np.argmax([self.k_fold_cross_validation(k, input_embedding, labels, hyperParametersList[i])
                                           for i in range(hyperParametersList.shape[0])]),:]
     

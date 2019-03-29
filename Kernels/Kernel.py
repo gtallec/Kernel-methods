@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Kernel:
     
     def __init__(self, kernel_fun):
@@ -10,7 +11,7 @@ class Kernel:
         n = inputs.shape[0]
         print('GETTING INTO IT')
         return self.compute_similarity_matrix(inputs, inputs) + eps*np.identity(n)
-    
+          
     def compute_similarity_matrix(self, x, y):
         n = x.shape[0]
         m = y.shape[0]
@@ -19,4 +20,6 @@ class Kernel:
                                       shape = (n,m),
                                       dtype = x.dtype)
         return similarity_matrix
+    
+    
                 
