@@ -22,12 +22,12 @@ class Kernel:
                                       dtype = x.dtype)
         return similarity_matrix
     
-    def save_embedding(self, embedding):
-        filename = 'embeddings/' + self.kernel_name
+    def save_embedding(self, embedding, embed_type, dataset):
+        filename = 'embeddings/' + embed_type + dataset + self.kernel_name
         np.savetxt(filename + '.csv', embedding, delimiter=",")
         
-    def load_embedding(self):
-        filename = 'embeddings/' + self.kernel_name
+    def load_embedding(self, embed_type, dataset):
+        filename = 'embeddings/' + embed_type + dataset + self.kernel_name
         return np.genfromtxt(filename + '.csv', delimiter=',')
         
         

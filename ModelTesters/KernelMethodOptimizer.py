@@ -44,15 +44,27 @@ class KernelMethodOptimizer:
         print('accuracy list', accuracy_list)
         return np.mean(accuracy_list)
     
-    def find_optimal_parameters(self, k, inputs, labels, hyperParametersList, load = False):
+    def find_optimal_parameters(self, k, inputs, labels, hyperParametersList, dataset, load = False):
         input_embedding = None
         if load:
-            input_embedding = self.kernel.load_embedding()
+            input_embedding = self.kernel.load_embedding('train', dataset)
         else:
             input_embedding = self.kernel.matrix_from_data(inputs)
-        self.kernel.save_embedding(input_embedding)
+        self.kernel.save_embedding(input_embedding, 'train', dataset)
         return hyperParametersList[np.argmax([self.k_fold_cross_validation(k, input_embedding, labels, hyperParametersList[i])
                                           for i in range(hyperParametersList.shape[0])]),:]
+    
+    def make_optimal_prediction(self, k, inputs, tests, labels, hyperParametersList, dataset, load_train = False, load_test = False):
+        hyperParameters = self.find_optimal_parameters(k , inputs, labels, hyperParametersList, dataset, load_train)
+        self.model.setHyperParameters(hyperParameters)
+        #Compute test embedding
+        test_embedding = None
+        if load_test:
+            test_embedding = self.kernel.load('test', dataset)
+        else:
+            test_embedding = self.kernel.compute_prediction_embedding(inputs, tests)
+        self.kernel.save_embedding(test_embedding, 'test', dataset) 
+        return self.model.predict(test_embedding)
     
         
         
