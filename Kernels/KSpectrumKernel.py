@@ -8,7 +8,7 @@ import copy
 class KSpectrumKernel(Kernel.Kernel):
     
     def __init__(self,k,alphabet,lmbda):
-        Kernel.Kernel.__init__(self, None, 'kstring?k=' + str(k) + '&lmbda=' str(lbmda))
+        Kernel.Kernel.__init__(self, None, 'kstring?k=' + str(k) + '&lmbda=' + str(lbmda))
         self.lmbda = lmbda
         self.k = k
         self.alphabet_length = len(alphabet)

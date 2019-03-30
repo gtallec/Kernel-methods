@@ -55,14 +55,18 @@ class KernelMethodOptimizer:
                                           for i in range(hyperParametersList.shape[0])]),:]
     
     def make_optimal_prediction(self, k, inputs, tests, labels, hyperParametersList, dataset, load_train = False, load_test = False):
-        hyperParameters = self.find_optimal_parameters(k , inputs, labels, hyperParametersList, dataset, load_train)
-        self.model.setHyperParameters(hyperParameters)
-        #Compute test embedding
-        test_embedding = None
+        print(tests.shape)
+        print(inputs.shape)
         if load_test:
             test_embedding = self.kernel.load('test', dataset)
         else:
             test_embedding = self.kernel.compute_prediction_embedding(inputs, tests)
+        
+        hyperParameters = self.find_optimal_parameters(k , inputs, labels, hyperParametersList, dataset, load_train)
+        self.model.setHyperParameters(hyperParameters)
+        #Compute test embedding
+        test_embedding = None
+
         self.kernel.save_embedding(test_embedding, 'test', dataset) 
         return self.model.predict(test_embedding)
     

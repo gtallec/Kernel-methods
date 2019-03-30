@@ -86,7 +86,7 @@ class MismatchKernel(Kernel.Kernel):
         n = inputs.shape[0]
         m = tests.shape[0]
         
-        tot_data = np.vstack([inputs, tests])
+        tot_data = np.concatenate((inputs, tests))
         features = self.features_from_data(tot_data)
         
         training_features = features[:,:n]
