@@ -46,7 +46,7 @@ class KSpectrumKernel(Kernel.Kernel):
         
         for i in range(X-k):
             for j in range(Y-k):
-                Kern += K_p(p, x[i:i+k], y[j:j+k])
+                Kern += K_p(k, x[i:i+k], y[j:j+k])
                 
         return Kern
     @jit
